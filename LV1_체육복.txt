@@ -9,7 +9,8 @@ int solution(int n, vector<int> lost, vector<int> reserve) {
    int answer = n-lost.size();
     sort(lost.begin(), lost.end(),greater<>());
     sort(reserve.begin(), reserve.end(),greater<>());
-
+    // sort를 굳이 사용하지 않아도 됨. 
+    
     for(unsigned int i=0; i<reserve.size(); i++)
     {
         for(unsigned int j=0; j<lost.size(); j++)
