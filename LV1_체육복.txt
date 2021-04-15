@@ -1,0 +1,58 @@
+
+#include <string>
+#include <vector>
+#include <functional>
+
+using namespace std;
+
+int solution(int n, vector<int> lost, vector<int> reserve) {
+   int answer = n-lost.size();
+    sort(lost.begin(), lost.end(),greater<>());
+    sort(reserve.begin(), reserve.end(),greater<>());
+
+    for(unsigned int i=0; i<reserve.size(); i++)
+    {
+        for(unsigned int j=0; j<lost.size(); j++)
+        {
+            if(reserve[i] == lost[j])
+            {
+                reserve[i] = -1;
+                lost[j] = -5;
+                answer++;
+            }
+        }
+    }
+
+
+    for (unsigned int i = 0; i<reserve.size(); i++)
+    {
+        for (unsigned int j = 0; j < lost.size(); j++)
+        {
+            if (reserve[i] == 1 && reserve[i] + 1 == lost[j])
+            {
+                reserve[i] = -1;
+                lost[j] = -1;
+            }
+
+            if (reserve[i] == n && reserve[i] - 1 == lost[j])
+            {
+                reserve[i] = -1;
+                lost[j] = -1;
+            }
+
+            if (reserve[i] + 1 == lost[j] || reserve[i] - 1 == lost[j])
+            {
+                reserve[i] = -1;
+                lost[j] = -1;
+            }
+        }
+    }
+
+    for (unsigned int i = 0; i < lost.size(); i++)
+    {
+        if (lost[i] == -1)
+            answer++;
+    }
+
+    return answer;
+}
