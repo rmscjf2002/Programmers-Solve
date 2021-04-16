@@ -1,0 +1,34 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solution(int n) {
+    
+    int answer = 0;
+    vector<int> v;
+    string tmp;
+    int j = 1;
+    
+	while (n)
+	{
+		v.push_back(n % 3);
+		n /= 3;
+       // if(n == 1)
+       //      break;
+	}
+    /* while(1)로 돌리고 break포인트를 정했을 땐 시간초과가 나옴 */
+    /* -> while(n)으로 돌리면 시간초과 해결 */
+    /* n이 무조건 마지막에 1로떨어지는게 아니라 23을 나눌 경우 n이 0이 되므로 시간초과 */
+    //v.push_back(n);
+	reverse(v.begin(), v.end());
+	
+	for (unsigned int i = 0; i < v.size(); i++)
+	{
+		answer += v[i]*j;
+		j *= 3;
+	}
+    
+    return answer;
+}
