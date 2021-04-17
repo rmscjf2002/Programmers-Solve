@@ -1,0 +1,49 @@
+#include <vector>
+#include <iostream>
+using namespace std;
+
+int solution(vector<int> nums) {
+    int answer =0;
+	int cnt = 0;
+	int a;
+	int b;
+	int c;
+	vector<int> ans;
+
+	int not_prime[3001] = { 0,1,0 };
+
+	for (int i = 2; i < 3001; i++)
+	{
+		for (int j = i * 2; j < 3001; j = j + i)
+		{
+			if (not_prime[j] == 0)
+				not_prime[j] = 1;
+		}
+	} // 에라토스테네스의 체 <소수 판별>
+
+	for (unsigned int i = 0; i < nums.size(); i++)
+	{
+		
+		a = nums[i];
+		for (unsigned int j = i + 1; j < nums.size(); j++)
+		{
+			b = nums[j];
+			for (unsigned int k = j + 1; k < nums.size(); k++)
+			{
+				c = nums[k];
+				
+				
+				if (not_prime[a + b + c] == 0)
+                {
+                    ans.push_back(a + b + c);
+                }
+			}
+			
+		}
+	}
+	answer = ans.size();
+
+    
+
+    return answer;
+}
