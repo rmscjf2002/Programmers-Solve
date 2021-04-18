@@ -61,4 +61,6 @@ int solution(string dartResult) {
 	for (unsigned int i = 0; i < v.size(); i++)
 		answer += v[i];
     return answer;
+
+/* sstream을 사용하면 더 짧게 코드 표현이 가능하다 (새로운 지식)  */
 }
