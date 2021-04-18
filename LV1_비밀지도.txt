@@ -1,0 +1,54 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+
+using namespace std;
+
+vector<string> solution(int n, vector<int> arr1, vector<int> arr2) {
+    vector<string> answer;
+
+
+	vector<int> tv1;
+	vector<int> tv2;
+	
+	string s;
+
+	
+
+	for(int i=0; i<n; i++)
+	{
+		s.clear();
+		tv1.clear();
+		tv2.clear();
+
+		while (arr1[i])
+		{
+			tv1.push_back(arr1[i] % 2);
+			arr1[i] /= 2;
+		}
+		while (arr2[i])
+		{
+			tv2.push_back(arr2[i] % 2);
+			arr2[i] /= 2;
+		}
+		while ((int)tv1.size() < n)
+			tv1.push_back(0);
+		while ((int)tv2.size() < n)
+			tv2.push_back(0);
+
+		reverse(tv1.begin(), tv1.end());
+		reverse(tv2.begin(), tv2.end());
+
+		for (int j = 0; j < n; j++)
+		{
+			
+			if (tv1[j] == 1 || tv2[j] == 1)
+				s  += '#';
+			else if (tv1[j] == 0 && tv2[j] == 0)
+				s  += ' ';
+		}
+		answer.push_back(s);
+	}
+    return answer;
+}
