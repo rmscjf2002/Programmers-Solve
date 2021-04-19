@@ -1,0 +1,61 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <functional>
+using namespace std;
+
+/* VisualStudio에선 0으로 나눈 경우 알아서 예외처리가 되지만
+   프로그래머스에선 그렇지 못함. 컴파일러 환경마다 다른걸 유의 */
+
+
+bool pred(pair<double, int> a, pair<double, int> b)
+{
+	if (a.first > b.first)
+		return true;
+	else if (a.first == b.first)
+	{
+		return a.second < b.second;
+	}
+	return false;
+}
+
+
+vector<int> solution(int N, vector<int> stages) {
+    vector<int> answer;
+    vector<pair<double,int>> clear;
+	sort(stages.begin(), stages.end());
+	int cnt = 1;
+	double person;
+	double totalperson;
+
+
+	while (N--)
+	{
+		person = 0;
+		totalperson = 0;
+		for (unsigned int i = 0; i < stages.size(); i++)
+		{
+			if (stages[i] >= cnt)
+			{
+				if (stages[i] == cnt)
+                {
+					person++;
+                    totalperson++;
+                }
+				else
+					totalperson++;
+			}
+		}
+        
+		if (totalperson == 0)
+			clear.push_back({ 0,cnt });
+		else
+			clear.push_back({ person/totalperson,cnt });
+		cnt++;
+	}
+	
+	sort(clear.begin(), clear.end(),pred);
+	for (unsigned int i = 0; i < clear.size(); i++)
+		answer.push_back(clear[i].second);
+    return answer;
+}
