@@ -1,0 +1,36 @@
+#include <string>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+vector<int> solution(vector<int> prices) {
+    vector<int> answer;
+    stack<int> s;
+	int cnt;
+	int tmp = 0;
+	while (tmp < prices.size())
+	{
+		cnt = 0;
+		for (unsigned int i = tmp; i < prices.size(); i++)
+		{
+			if(s.empty())
+				s.push(prices[i]);
+			else if (!s.empty() && s.top() <= prices[i])
+			{
+				cnt++;
+			}
+			else if (!s.empty() && s.top() > prices[i])
+			{
+				cnt++;
+				break;
+			}
+		
+		}
+	
+		s.pop();
+		answer.push_back(cnt);
+		tmp++;
+	}
+    return answer;
+}
