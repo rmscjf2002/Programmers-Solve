@@ -1,0 +1,66 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+
+bool pred(string a, string b)
+{
+	
+	return a + b > b + a;
+}
+
+string func(int a)
+{
+	string ans;
+	vector<char> v;
+	while (1)
+	{
+		if (a / 10 == 0)
+		{
+			v.push_back(a);
+			break;
+		}
+		v.push_back(a % 10);
+		a /= 10;
+		
+	}
+	reverse(v.begin(), v.end());
+	for (unsigned int i = 0; i < v.size(); i++)
+	{
+		ans += (v[i]+'0');
+	}
+	return ans;
+}
+
+string solution(vector<int> numbers) {
+    string answer = "";
+    
+    vector<string> v;
+	
+	for (unsigned int i = 0; i < numbers.size(); i++)
+	{
+		v.push_back(func(numbers[i]));
+	}
+
+	sort(v.begin(), v.end(),pred);
+	
+
+	for (unsigned int i = 0; i < v.size(); i++)
+	{
+		answer += v[i];
+	}
+    
+    int cnt = 0;
+	for (unsigned int i = 0; i < answer.size(); i++)
+	{
+		if (answer[i] == '0')
+			cnt++;
+	}
+    if (cnt == answer.size())
+        answer = "0";
+    
+     return answer;
+}
+/* 0,0,0일 때 0을 출력해야되는 case를 못찾음 */
