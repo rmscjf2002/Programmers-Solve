@@ -1,0 +1,41 @@
+#include<string>
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+bool solution(string s)
+{
+    bool answer = true;
+
+    stack<char> _s;
+
+	for (unsigned int i = 0; i < s.size(); i++)
+	{
+		if (_s.empty())
+		{
+			_s.push(s[i]);
+		}
+		else if (!_s.empty() && _s.top() == '(' )
+		{
+			if (s[i] == ')')
+				_s.pop();
+			else
+			{
+				_s.push(s[i]);
+			}
+		}
+		else if (!_s.empty() && _s.top() == ')')
+		{
+			answer = false;
+			break;
+		}
+	}
+
+	if (_s.empty())
+		answer = true;
+	else
+		answer = false;
+
+    return answer;
+}
