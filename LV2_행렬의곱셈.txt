@@ -1,0 +1,28 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+vector<vector<int>> solution(vector<vector<int>> arr1, vector<vector<int>> arr2) {
+    
+    vector<int> v;
+    vector<vector<int>> answer;
+    for (unsigned int i = 0; i < arr1.size(); i++)
+	{
+		for (unsigned int j = 0; j < arr2[0].size(); j++)
+		{
+			int tmp = 0;
+			for (unsigned int k = 0; k < arr2.size(); k++)
+			{
+				tmp += arr1[i][k] * arr2[k][j];
+			}
+			v.push_back(tmp);
+			if (v.size() == arr2[0].size())
+			{
+				answer.push_back(v);
+				v.clear();
+			}
+		}
+	}
+    return answer;
+}
