@@ -1,0 +1,74 @@
+#include <string>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+
+bool pred(string a, string b)
+{
+	if ((a[0] == '-' && b[0] != '-') || (b[0] == '-' && a[0] != '-' ))
+	{
+		return a < b;
+	}
+	else if (a[0] == '-'  &&  b[0] == '-')
+	{
+		if(a.size() != b.size())
+			return a.size() > b.size();
+
+		return a > b;
+	}
+	else
+	{
+		if (a.size() != b.size())
+			return a.size() < b.size();
+		return a < b;
+	}
+}
+string solution(string s) {
+   string answer;
+	vector<string> v;
+	string tmp;
+	bool minus = false;
+	for (unsigned int i = 0; i < s.size(); i++)
+	{
+		if (s[i] == '-')
+		{
+			minus = true;
+			tmp += '-';
+		}
+		else if (s[i] == ' ')
+		{
+			
+			v.push_back(tmp);
+			tmp.clear();
+			minus = false;
+			
+		}
+
+		else
+		{
+			if (minus == true)
+			{
+				tmp += s[i];
+			}
+			else
+			{
+				tmp += s[i];
+			}
+		}
+	}
+
+	v.push_back(tmp);
+	
+	
+	sort(v.begin(), v.end(),pred);
+
+	answer += v[0];
+	answer += ' ';
+	answer += v[v.size() - 1];
+    return answer;
+}
+
+/* int로 바꿔서 푸는게 편하다 ,
+   stoi쓰면 베스트 */
