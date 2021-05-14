@@ -8,14 +8,14 @@ vector<pair<int,int>> solution(int brown, int yellow) {
     bool breaking = false;
 	int sum = brown + yellow;
 
-	for (int i = 1; i <= sum/2; i++)
+	for (int i = 1; i <= brown; i++)
 	{
-		for (int j = 1; j <= sum/2; j++)
+		for (int j = 1; j <= brown; j++)
 		{
 			int tmp = 0;
 			if (i >= j && i*j == sum)
 			{
-				for (int k = 1; k <= sum/2; k++)
+				for (int k = 1; k <= brown; k++)
 				{
 					
 					tmp += ((i - (k * 2)) * 2 + (j - (k * 2)) * 2)+4;
