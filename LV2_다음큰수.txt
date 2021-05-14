@@ -1,0 +1,38 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int func(int a)
+{
+	int cnt = 0;
+
+	while (1)
+	{
+		if (a / 2 == 0)
+			break;
+
+		if (a % 2 == 1)
+			cnt++;
+		a /= 2;
+	}
+	if (a % 2 == 1)
+		cnt++;
+	return cnt;
+}
+
+int solution(int n) {
+    int answer;
+	int cnt;
+	int tmp = func(n);
+	while (1)
+	{
+		n++;
+		cnt = func(n);
+		if (tmp == cnt)
+			break;
+
+	}
+	answer = n;
+    return answer;
+}
