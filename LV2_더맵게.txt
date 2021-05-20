@@ -1,0 +1,28 @@
+#include <string>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
+int solution(vector<int> scoville, int K) {
+    int answer = 0;
+
+	priority_queue<int, vector<int>, greater<int>> pq(scoville.begin(),scoville.end());
+
+	while (pq.top() < K && pq.size() > 1)
+	{
+		int Min1 = pq.top();
+		pq.pop();
+		int Min2 = pq.top();
+		pq.pop();
+		pq.push(Min1 + (Min2 * 2));
+		answer++;
+	}
+	if (pq.top() < K)
+		return -1;
+	else
+		return answer;
+}
+
+/* priority_queue를 정의할 때 less<자료형>은 큰 놈부터 출력,
+                             greater<자료형>을 넣으면 작은 놈부터 출력 */
