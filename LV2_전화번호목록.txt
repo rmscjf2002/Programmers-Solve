@@ -1,0 +1,21 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+bool solution(vector<string> phone_book) {
+   sort(phone_book.begin(), phone_book.end());
+	
+	int size = phone_book.size();
+	for (int i = 0; i < size-1; i++)
+	{
+		int len = phone_book[i].length();
+		if (phone_book[i] == phone_book[i + 1].substr(0, len))
+			return false;
+	}
+	return true;
+}
+
+/* 문자열을 그냥 정렬하고 하나씩 비교하면 됨. 
+   2중for문을 쓸 필요가 없다 */
