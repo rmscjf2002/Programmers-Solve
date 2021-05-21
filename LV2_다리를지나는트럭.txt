@@ -1,0 +1,37 @@
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int solution(int bridge_length, int weight, vector<int> truck_weights) {
+    queue<int> ing;
+	int waitidx = 0;
+	int ingsum = 0;
+	int time = 0;
+
+	for (int i = 0; i < bridge_length; i++)
+		ing.push(0);
+
+	while (!ing.empty())
+	{
+		time++;
+		ingsum -= ing.front();
+		ing.pop();
+
+		if (waitidx < truck_weights.size())
+		{
+			if (ingsum + truck_weights[waitidx] <= weight)
+			{
+				ingsum += truck_weights[waitidx];
+				ing.push(truck_weights[waitidx]);
+				waitidx++;
+			}
+			else
+				ing.push(0);
+		}
+	}
+    return time;
+}
+
+/* q를 0으로 채우는 기술 */
