@@ -1,0 +1,32 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <map>
+using namespace std;
+
+int solution(vector<vector<string>> clothes) {
+    int answer = 1;
+	map<string, int> m;
+	vector<string> v;
+    
+    int size = clothes.size();
+    
+    for (int i = 0; i < size; i++)
+	{
+			m[clothes[i][1]]++;
+			v.push_back(clothes[i][1]);
+		
+	}
+    
+    sort(v.begin(), v.end());
+	v.erase(unique(v.begin(), v.end()), v.end());
+	
+	for (unsigned int i = 0; i < v.size(); i++)
+	{
+		answer *= (m[v[i]] + 1);
+	}
+
+	answer -= 1;
+    return answer;
+}
+/* sort를 하고 erase(unique)로 중복원소 제거 */
