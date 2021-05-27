@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+using namespace std;
+
+/* dp활용 */
+
+int solution(vector<vector<int>> board)
+{
+    int answer = board[0][0]; // board[0][0]으로 두는 이유 : 1X1형태의 표 일 수가 있다.
+	int rowsize = board.size();
+	int colsize = board[0].size();
+
+	/* 1,1이 처음 시작하는 사각형의 형태이므로 i,j를 1부터 시작 */
+	
+	for (int i = 1; i < rowsize; i++)
+	{
+		for (int j = 1; j < colsize; j++)
+		{
+			if (board[i][j] == 1)
+			{
+				board[i][j] = 1 + min({ board[i][j - 1],board[i - 1][j],board[i - 1][j - 1] });
+				answer = max(answer, board[i][j]);
+			}
+		}
+	}
+
+   
+
+    return answer*answer;
+}
