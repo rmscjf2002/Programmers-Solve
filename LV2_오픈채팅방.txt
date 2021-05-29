@@ -1,0 +1,131 @@
+/*
+#include <string>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+vector<string> solution(vector<string> record) {
+    vector<string> answer;
+	map<string, string> m;
+
+	for (unsigned int i = 0; i < record.size(); i++)
+	{
+		bool leave = false;
+		if (record[i][0] == 'L')
+			leave = true;
+
+		// leave일 때는 uid값으로 문자열이 끝이나므로 구분해야함.
+		if (leave == false)
+		{
+			string tmp; // id값을 저장할 string변수
+			int idx = record[i].find("uid"); // 식별할 수 있는 id 의 시작부분 u의 인덱스 리턴
+			for (idx; record[i][idx] != ' '; idx++)
+			{
+				tmp += record[i][idx];
+			} // 공백을 만날때 까지 돌려서 tmp에 uid값을 입력
+
+			idx++; // idx가 공백에 있으니까 +1해줘서 이름의 맨앞 인덱스로 변환.
+			string name; // 이름을 저장할 string 변수
+			for (idx; record[i][idx] != '\0'; idx++)
+			{
+				name += record[i][idx];
+			} // null을 만날때 까지 돌려서 name에 이름값을 입력
+			if (m[tmp].size() != 0)
+				m[tmp].clear(); // 아이디값에 이미 이름이 저장되어 있으면 초기화.
+			m[tmp] = name; // 아이디값에 이름 저장
+		}
+
+	} // map의  id에 매칭시켜 이름을 제대로 저장
+
+	for (unsigned int i = 0; i < record.size(); i++)
+	{
+		bool leave = false;
+		bool enter = false;
+		if (record[i][0] == 'L')
+			leave = true;
+		else if (record[i][0] == 'E')
+			enter = true;
+
+		if (leave == true)
+		{
+			// leave일때는 uid로 문자열이 끝나므로 uid의 시작 인덱스를find하고 null을 만날때 까지 for문을 돌린다.
+			string tmp;
+			int idx = record[i].find("uid");
+			for (idx; record[i][idx] != '\0'; idx++)
+			{
+				tmp += record[i][idx];
+			}
+
+			answer.push_back(m[tmp] + "님이 나갔습니다.");
+		}
+
+		else if (enter == true)
+		{
+			// enter일때는 uid 공백 다음 닉네임까지 나오니까 공백까지 for문을 돌려서 uid값을 구함
+			string tmp;
+			int idx = record[i].find("uid");
+			for (idx; record[i][idx] != ' '; idx++)
+				tmp += record[i][idx];
+
+			answer.push_back(m[tmp] + "님이 들어왔습니다.");
+		}
+		else // change일 때는 그냥 continue;
+			continue;
+	}
+
+    return answer;
+}
+*/
+
+/* 
+   처음에 위같이 코드를 짰는데 1번빼고 다 실패가 나와서, 다른사람들의 답을 보니까,
+   sstream이란 방식을 사용해 간단히 짯다. 그걸 보고 아래와 같이 변경했다. 
+*/
+
+
+#include <string>
+#include <vector>
+#include <sstream>
+#include <map>
+
+using namespace std;
+
+vector<string> solution(vector<string> record) {
+   vector<string> answer , state;
+	// Enter일때는 님이 들어왔습니다. Leave일때는 님이 나갔습니다.를 저장할 state변수
+	map<string, string> m;
+	// uid와 name을 매칭시킬 map
+	for (unsigned int i = 0; i < record.size(); i++)
+	{
+		string s[3];
+		string token; // stringstream에서 추출 한 값을 받을 변수
+		stringstream ss; // stringstream 변수 
+        ss.str(record[i]); 
+		int idx = 0;
+		while (ss >> token) // record[i] 에서 string을 추출해서 s배열에 넣는다.
+			s[idx++] = token; 
+        // 그러면 s[0] 에는 Enter,Leave,Change같은 상태가 들어가고 ,
+        // s[1]에는 uid값, s[2]에는 name이 들어감.
+
+		if (s[0] == "Enter")
+		{
+			state.push_back("님이 들어왔습니다.");
+			answer.push_back(s[1]);
+			m[s[1]] = s[2];
+		}
+		else if (s[0] == "Leave")
+		{
+			state.push_back("님이 나갔습니다.");
+			answer.push_back(s[1]);
+		}
+		else
+			m[s[1]] = s[2];
+
+	}
+
+	for (unsigned int i = 0; i < answer.size(); i++)
+		answer[i] = m[answer[i]] + state[i];
+    
+    return answer;
+}
