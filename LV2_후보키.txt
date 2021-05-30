@@ -1,0 +1,55 @@
+#include <string>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+/* 비트를 이용한 부분집합 
+   비트연산자로 이렇게 풀 수 있다는걸 처음알았다.
+   하지만 다른 비트연산자 문제가 나오면 풀 수 있을지 의문이고, 아직 문제가 어렵게 느껴진다. 
+*/
+
+vector<int> answer;
+
+int minimality(int a) // 최소성을 구하는 함수
+{
+	for (unsigned int i = 0; i < answer.size(); i++)
+	{
+		if ((answer[i] & a) == answer[i])
+			return 0;
+	}
+	return 1;
+}
+
+int solution(vector<vector<string>> relation) {
+   	int row = relation.size();
+	int col = relation[0].size();
+
+	// (비트연산자)  i << num은  i*2^num과 같다. 
+	// 즉 1 << 4 는 2^4 = 16 
+	// 후보키를 만들 수 있는 경우의 수가 2^(열의개수) 와 같아서 비트연산자 사용
+
+	for (int i = 1; i < (1 << col); i++)
+	{
+		map<string, int> m;
+
+		for (int j = 0; j < row; j++)
+		{
+			string tmp;
+
+			for (int k = 0; k < col; k++)
+			{
+				if (i & (1 << k)) 
+					tmp += relation[j][k];
+			}
+			m[tmp] = 1;
+		}
+
+		// 유일성을 만족하면 행의 size랑 같아지므로 , m.size() == row 
+
+		if (m.size() == row && minimality(i) == 1)
+			answer.push_back(i);
+	}
+
+    return answer.size();
+}
