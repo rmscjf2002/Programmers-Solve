@@ -1,0 +1,97 @@
+/*
+
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solution(vector<int> people, int limit) {
+    
+	vector<vector<int>> boat;
+	vector<int> v;
+
+
+	sort(people.begin(), people.end());
+
+    int cnt = 1;
+	int sum = people[0];
+	v.push_back(people[0]);
+
+	for (unsigned int i = 1; i < people.size(); i++)
+	{
+		if (sum + people[i] <= limit)
+		{
+			cnt++;
+			if (cnt < 3)
+			{
+				sum += people[i];
+				v.push_back(people[i]);
+			}
+			else
+			{
+				boat.push_back(v);
+				v.clear();
+				sum = people[i];
+				v.push_back(people[i]);
+				cnt = 1;
+			}
+		}
+		else
+		{
+			boat.push_back(v);
+			v.clear();
+			sum = people[i];
+			v.push_back(people[i]);
+		}
+	}
+
+	if (!v.empty())
+		boat.push_back(v);
+    
+    return boat.size();
+}
+
+*/
+
+/* 처음에 오름차순으로 정렬하고 최소값부터 무식하게넣는 방식을 사용했는데,
+   그럴경우 [40,50,60,140,150,160] limit = 200 일 경우 
+   3이 나와야하는데 4가 나오는 문제점이 있었다.
+*/
+
+
+#include <string>
+#include <deque>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int solution(vector<int> people, int limit) {
+    sort(people.begin(), people.end());
+    // 오름차순으로 정렬 
+
+	int answer = 0;
+	
+	deque<int> dq;
+    
+    // 효율성 위해서 deque에 데이터를 옮겨담는다.
+	for (unsigned int i = 0; i < people.size(); i++)
+		dq.push_back(people[i]);
+
+	while (!dq.empty())
+	{
+        // 데이터가 2개이상 있으면, 최소값과,최대값을 비교해서 limit를 초과하는지 확인한다.
+        // 처음에 나는 그냥 최소값 2개씩 넣었는데 최소와최대를 비교해가면서 진행해야 함.
+		if (dq.size() > 1 && limit - dq.back() >= dq.front())
+		{
+			dq.pop_back();
+			dq.pop_front();
+		}
+        // 최대값과최소값 2개가 안들어가면 최대값을 먼저 태운다.
+		else
+			dq.pop_back();
+		answer++;
+	}
+    return answer;
+}
