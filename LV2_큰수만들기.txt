@@ -1,0 +1,98 @@
+/*
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+string solution(string number, int k) {
+    int size = number.size() - k;
+
+
+	vector<char> v;
+
+	for (unsigned int i = 0; i < number.size(); i++)
+	{
+		v.push_back(number[i]);
+	}
+
+	vector<int> tmp;
+
+	for (int i = 0; i < size; i++)
+		tmp.push_back(1);
+
+	for (int i = 0; i < number.size() - size; i++)
+		tmp.push_back(0);
+
+	sort(tmp.begin(), tmp.end());
+
+	int Max = 0;
+
+	do {
+		int valtmp = 0;
+		for (unsigned int i = 0; i < tmp.size(); i++)
+		{
+			
+			if (tmp[i] == 1)
+			{
+				valtmp *= 10;
+				valtmp += v[i] - '0';
+			}
+			Max = max(Max, valtmp);
+		}
+
+	} while (next_permutation(tmp.begin(), tmp.end()));
+
+	string answer = to_string(Max);
+   
+    return answer;
+}
+
+*/
+
+/* next_permutation으로 조합을 구한다음 그 중 큰 수를 return 하는 방법으로 짰는데,
+   testcase1 성공 , 2실패 ,3~10 시간초과가 나왔다. 
+   next_permutation은 O(n)의 시간복잡도를 가져서 길이가 길 수록 시간초과 가능성이 높아진다 */
+
+// tmp를 줄여나가면서 자릿수를 맞췄다 (아래코드)
+
+#include <string>
+#include <vector>
+
+using namespace std;
+
+string solution(string number, int k) {
+    string answer = "";
+    
+    vector<char> v;
+    int tmp = k; // 매개변수 k를 내리면서 자리수 조정을 할거기 떄문에 k값을 tmp에 담음
+    int size = number.size();
+    for(int i=0; i<size; i++)
+    {
+        // vector가 비어있거나, tmp가 0이면 v에 push_back
+        if(tmp == 0 || v.empty())
+        {
+            v.push_back(number[i]);
+            continue;
+        }
+        
+        int vsize = v.size();
+        
+        for(int j=0; j<vsize; j++)
+        {
+            // v의 마지막원소가 number[i]보다 작고, tmp가 1이상이면
+            // v.pop_back()하고 tmp값을 하나 내려줌.
+            if(v.back() < number[i] && !v.empty() && tmp > 0)
+            {
+                v.pop_back();
+                tmp--;
+            }
+        }
+         v.push_back(number[i]);
+    }
+   
+    
+    for(int i=0; i<size-k; i++)
+        answer+=v[i];
+    return answer;
+}
