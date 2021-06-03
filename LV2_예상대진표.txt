@@ -1,0 +1,47 @@
+#include <iostream>
+
+using namespace std;
+
+int solution(int n, int a, int b)
+{
+    int cnt = 1;
+	while (1)
+	{
+        // a = 4 , b = 5 같은 경우 일 때는 a와b가 1차이지만 3경기를 치뤄야만나기 때문에 if문 안에 예외처리를 해줬다.
+		if ((a == b + 1) || (b == a+1))
+		{
+			if (a % 2 == 0)
+			{
+				if (b == a - 1)
+					break;
+			}
+
+			if (b % 2 == 0)
+			{
+				if (a == b - 1)
+					break;
+			}
+		}
+
+		if (a % 2 == 1) // 홀수면 + 1을하고 /2
+		{
+			a += 1;
+			a /= 2;
+		}
+		else
+			a /= 2;
+
+
+		if (b % 2 == 1)
+		{
+			b += 1;
+			b /= 2;
+		}
+		else
+			b /= 2;
+		cnt++;
+		
+
+	}
+    return cnt;
+}
