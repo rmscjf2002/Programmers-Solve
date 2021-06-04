@@ -1,0 +1,91 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+vector<int> solution(int n) {
+    
+    /* 2차원벡터의 크기를 n+1xn+1크기로 초기화 */
+    vector<vector<int>> arr(n+1,vector<int>(n+1)); 
+    int row1 = 0; // 2차원벡터에 행 값을 저장할 변수
+	int col1 = 0; // 2차원벡터에 열 값을 저장할 변수
+	int num = 1; // 삼각달팽이는 값이 1씩 계속 증가하므로 값을 증가시킬 변수
+	int cnt = 1; // 열유지,행+1 (cnt=1) , 행유지,열+1 (cnt=2) , 행-1,열-1 (cnt=3) 이 단계들을 cnt로 구분
+	
+	int idx = n; // 반복해야하는 횟수를 담는 변수
+	vector<int> answer;
+	while (idx != 0)
+	{
+		if (cnt == 1) // 첫번째 단계 (열 유지, 행 + 1)
+		{
+			int i = idx;
+			while (i!=0) 
+			{
+				arr[row1][col1] = num;
+				row1++;
+				if (i==1) // i가 1이되면 마지막이니까 다음단계로 넘어가기전에 행의 값을 되돌려놈.
+					row1--;
+				num++;
+				i--;
+			}
+			col1++; 
+			cnt++;
+		}
+
+		else if (cnt == 2) // 두번째 단계 (행 유지, 열 + 1)
+		{
+			int i = idx;
+			while (i!=0)
+			{
+				arr[row1][col1] = num;
+				col1++;
+				if (i==1) // i가 1이되면 마지막이니까 다음단계로 넘어가기전에 열의 값을 되돌려놈.
+					col1--;
+				num++;
+				i--;
+			}
+			row1--;
+			col1--;
+			cnt++;
+		}
+
+		else if (cnt == 3) // 세번째 단계 (행 -1 , 열 -1)
+		{
+			int i = idx;
+			while (i != 0)
+			{
+				arr[row1][col1] = num;
+				row1--;
+				col1--;
+				if (i == 1) // i가 1이되면 마지막이니까 행과열의 값을 되돌려놈.
+				{
+					row1++;
+					col1++;
+				}
+				num++;
+				i--;
+			}
+			row1++;
+			cnt++;
+		}
+		
+
+		if (cnt == 4) // 단계는 3개밖에없으므로 4가되면 다시 1단계로 넘어간다.
+			cnt = 1;
+		idx--;
+	}
+
+
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (arr[i][j] != 0)
+				answer.push_back(arr[i][j]);
+		}
+		
+	}
+
+    return answer;
+}
