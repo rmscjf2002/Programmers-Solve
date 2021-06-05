@@ -1,0 +1,62 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+
+char number[16] =
+{ '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F' };
+// 16진수가 최대니까 미리 배열로 0~15까지의 수를 저장
+
+string trans(int num ,int n) // num을 n진수로 변환
+{
+	string s;
+
+	while (1)
+	{
+		s += number[num % n];
+		num /= n;
+		if (num == 0)
+			break;
+	}
+	reverse(s.begin(), s.end());
+	return s;
+}
+
+string solution(int n, int t, int m, int p) {
+    string answer;
+	string s;
+	int Max = m*t; // 최대 나올 수 있는 길이
+
+	int num = 0;
+	while (1)
+	{
+		if (s.size() > Max) // 길이를 초과하면 break
+			break;
+		if (num == 0)
+			s += to_string(0);
+		else
+		{
+			string tmp = trans(num, n);
+			s += tmp;
+		}
+		num++;
+	}
+	
+	int cnt = 0; // 내 차례인지 확인하기 위한 변수
+	int i = 0; // s의 idx값을 나타내는 변수
+	while (1)
+	{
+		cnt++; 
+		if (cnt > m) // 만약 인원수를 초과하게되면 다시 cnt는 1로 
+			cnt = 1;
+		if (cnt == p)
+			answer += s[i];
+	
+		if (answer.length() == t) // 구하고자하는 길이가 되면 break
+			break;
+		i++;
+	}
+    return answer;
+}
