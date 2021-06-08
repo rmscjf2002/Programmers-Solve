@@ -1,0 +1,46 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+void func(int x, int y, int size,vector<vector<int>> & arr,vector<int> & answer)
+{
+
+	bool zero = false;
+	bool one = false;
+
+	for (int i = x; i < x + size; i++)
+	{
+		for (int j = y; j < y + size; j++)
+		{
+			if (arr[i][j] == 0)
+				zero = true;
+			if (arr[i][j] == 1)
+				one = true;
+		}
+	}
+
+	if (one && !zero)
+	{
+		answer[1]++;
+		return;
+	}
+
+	if (zero && !one)
+	{
+		answer[0]++;
+		return;
+	}
+
+	func(x, y, size / 2, arr, answer);
+	func(x, y + size / 2, size / 2, arr, answer);
+	func(x + size / 2, y, size / 2, arr, answer);
+	func(x + size / 2, y + size / 2, size / 2, arr,answer);
+}
+
+vector<int> solution(vector<vector<int>> arr) {
+    vector<int> answer(2,0);
+    int size = arr.size();
+	func(0, 0, size,arr,answer);
+    return answer;
+}
