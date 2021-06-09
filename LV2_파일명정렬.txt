@@ -1,0 +1,88 @@
+#include <string>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+bool pred(pair<string,int> &a, pair<string,int> &b)
+{
+	string head1, head2; // head부분을 담을 변수
+	string number1, number2; //  number부분을 담을 변수
+	bool head = true; // true면 head를 담는다.
+	bool tail = false; // number다음부분에서 숫자가 나올 수도 있어서 tail이라는 부울변수로 조정해줌.
+	
+	for (unsigned int i = 0; i < a.first.size(); i++)
+	{
+		if (a.first[i] >= '0' && a.first[i] <= '9' && tail == false)
+		{
+			head = false;
+			number1 += a.first[i];
+			if (!(a.first[i + 1] >= '0' && a.first[i + 1] <= '9'))
+				tail = true;
+		}
+		else
+		{
+			if (head == true)
+				head1 += a.first[i];
+		}
+	}
+	head = true;
+	tail = false;
+	for (unsigned int i = 0; i < b.first.size(); i++)
+	{
+		if (b.first[i] >= '0' && b.first[i] <= '9' && tail == false)
+		{
+			head = false;
+			number2 += b.first[i];
+			if (!(b.first[i + 1] >= '0' && b.first[i + 1] <= '9'))
+				tail = true;
+		}
+		else
+		{
+			if (head == true)
+				head2 += b.first[i];
+		}
+	}
+
+	for (unsigned int i = 0; i < head1.size(); i++)
+	{
+		head1[i] = toupper(head1[i]);
+	}
+
+	for (unsigned int i = 0; i < head2.size(); i++)
+	{
+		head2[i] = toupper(head2[i]);
+	} // 대소문자 구분없으니까 둘다 대문자로 치환
+
+
+    // head1과 head2가 같으면 숫자로 비교
+	if (head1 == head2)
+	{
+		int n1, n2; 
+		n1 = stoi(number1);
+		n2 = stoi(number2);
+		if (n1 == n2) // 숫자도 같으면 들어온 순서대로 정렬
+			return a.second < b.second;
+		else // 숫자가 다르면 오름차순 정렬
+			return n1 < n2;
+	}
+	else // head1과 head2과 다르다면 사전순으로 정렬
+		return head1 < head2;
+	
+}
+
+vector<string> solution(vector<string> files) {
+    vector<string> answer;
+    int size = files.size();
+	vector<pair<string, int>> v;
+	for (int i = 0; i < size; i++)
+	{
+		v.push_back({ files[i],i + 1 });
+	}
+	sort(v.begin(), v.end(), pred);
+    for(int i=0; i<size; i++)
+    {
+        answer.push_back(v[i].first);
+    }
+    return answer;
+}
