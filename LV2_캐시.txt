@@ -1,0 +1,72 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+
+// map을 value값 으로 오름차순하기 위한 정렬함수
+bool pred(const pair<string, int> & a, const pair<string, int> & b)
+{
+	return a.second < b.second;
+}
+
+int solution(int cacheSize, vector<string> cities) {
+    int answer = 0;
+	int cnt = 0; // map에 들어갈 순서 
+	map<string, int> m;
+
+	int size = cities.size();
+
+	if (cacheSize == 0) // cacheSize 가 0이면 무조건 miss니까 사이즈 * 5 를 반환하면 됨.
+	{
+		answer = cities.size() * 5;
+	}
+
+	else
+	{
+		for (int i = 0; i < size; i++)
+		{
+			// map의 value값을 오름차순 정렬하여 가장 오래된거 삭제 하려고 벡터정의
+			vector<pair<string, int>> v(m.begin(), m.end());
+			sort(v.begin(), v.end(), pred);
+
+			int len = cities[i].length();
+			string tmp;
+			for (int j = 0; j < len; j++)
+			{
+				tmp += toupper(cities[i][j]);
+			}
+            // 처음에 cities[i] = tmp를 for문 안에 집어넣어서 자꾸 엉뚱한 값이 저장되어가지고 고생을 했다.
+			cities[i] = tmp;
+            
+			// cache miss
+			if (m.find(cities[i]) == m.end()) 
+			{
+				if (m.size() < cacheSize) // 만약 map의 크기가 아직 차지않았으면 채워줌.
+				{
+					answer += 5;
+					m.insert(make_pair(cities[i], cnt));
+					cnt++;
+				}
+				else // map의 크기가 다 찼으므로 가장 오래된 값을 삭제하고 다시 채운다.
+				{
+					m.erase(v[0].first); 
+                    /* map에 담긴 값을 value값을 기준으로 오름차순 정렬해놔서 
+                       v[0]이 가장 오래 참조 안한 값이 되므로 삭제해줌 */
+					answer += 5;
+					m.insert(make_pair(cities[i], cnt));
+					cnt++;
+				}
+			}
+			else // cache hit
+			{
+				m[cities[i]] = cnt;
+				cnt++;
+				answer += 1;
+
+			}
+		}
+	}
+    return answer;
+}
