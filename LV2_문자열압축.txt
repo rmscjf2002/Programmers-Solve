@@ -1,0 +1,47 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(string s) {
+    int answer = s.size();
+	int size = s.size();
+
+	int cnt = 1; // 같은 문자가 반복되면 증가 시킬 cnt변수
+
+	for (int i = 1; i <= size/2; i++)
+	{
+		string storetmp; // 문자열을 압축한 결과를 저장할 변수
+		string tmp; // 반복되는 문자열을 저장할 변수
+
+		tmp = s.substr(0, i);
+
+		for (int j = i; j < size; j += i)
+		{
+			if (tmp == s.substr(j, i))
+				cnt++;
+			
+			else
+			{
+				if (cnt > 1)
+				{
+					storetmp += to_string(cnt);
+				}
+				storetmp += tmp;
+				tmp = s.substr(j, i);
+				cnt = 1;
+			}
+		}
+	
+		if (cnt > 1)
+			storetmp += to_string(cnt);
+		storetmp += tmp;
+        cnt = 1;
+        // ssize를 따로 int변수로 둔 이유는 min함수를 적용할 때 서로 자료형을 맞춰주기 위해서
+		int ssize = storetmp.size();
+        /* 길이를 비교해서 더 짧은 쪽을 선택함 */
+		answer = min(answer, ssize);
+		
+	}
+    return answer;
+}
