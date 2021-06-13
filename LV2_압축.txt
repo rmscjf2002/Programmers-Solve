@@ -1,0 +1,54 @@
+#include <string>
+#include <vector>
+#include <map>
+using namespace std;
+
+vector<int> solution(string msg) {
+    vector<int> answer;
+    vector<string> dic =
+	{
+		{"0","A","B","C","D","E","F","G","H","I","J","K",
+		 "L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"}
+	};
+    map<string, int> m; // 문자와 idx번호를 저장 할 map
+	int cnt = 1; // 문자열의 개수를 조정 할 cnt
+	int cur = 27; // 현재 idx
+
+	for (int i = 1; i <= 26; i++)
+		m.insert(make_pair(dic[i], i));
+
+	while (1)
+	{
+		string w = msg.substr(0, cnt); // 현재 단어를 추출함
+		string c = msg.substr(cnt, 1); // 다음 단어를 추출함
+		string wc = w + c; // 현재단어 + 다음단어
+
+		auto iterw = m.find(w); // find 함수를 이용하면 iterator를 반환하고, 만약 map에 해당 key가 없을 시 end를 반환함.
+		auto iterc = m.find(c);
+		auto iterwc = m.find(wc);
+
+		if (iterw != m.end()) // end가 아닐 경우 현재단어가 map에 존재하고 있다는 뜻
+		{
+			if (iterwc != m.end()) // 현재단어 + 다음단어가 map에 존재하면 존재하지 않을 때 까지 cnt를 늘림.
+			{
+				cnt++;
+			}
+
+			else
+			{
+				answer.push_back(iterw->second); // 만약 wc가 맵에 없으면 현재 단어의 idx값을 반환하고
+				m.insert(make_pair(wc, cur)); // 맵에 wc를 추가함.
+				cur++; // idx 상승
+				msg.erase(0, cnt); // 반환했으면 그 단어를 삭제시켜준다.
+				cnt = 1;
+			}
+		}
+		
+		if (c == "\0") // 다음 단어가 문자열의 끝이면 idx값을 반환하고 while문 종료 
+		{
+			answer.push_back(iterw->second);
+			break;
+		}
+	}
+    return answer;
+}
