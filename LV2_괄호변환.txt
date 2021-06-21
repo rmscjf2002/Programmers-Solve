@@ -1,0 +1,93 @@
+#include <string>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+
+/* 문제 이해가 너무 안됐다. */
+
+// 올바른 괄호 문자열
+bool check(string str)
+{
+	if (!str.size()) 
+        return true;
+	stack<char> s;
+	if (str[0] == ')')
+		return false;
+	else s.push(str[0]);
+
+	for (unsigned int i = 1; i<str.size(); i++)
+	{
+		if (str[i] == ')')
+		{
+			if (!s.empty() && s.top() == '(')
+				s.pop();
+            else
+				return false;
+		}
+		else if(str[i] == '(')
+			s.push(str[i]);
+	}
+
+	if (s.empty())
+		return true;
+	else 
+		return false;
+
+}
+
+string change(string str)
+{
+	if (str.size() <= 2)
+		return "";
+	string result = "";
+	for (unsigned int i = 1; i < str.size() - 1; i++)
+	{
+		if (str[i] == '(')
+			result += ')';
+		else
+			result += '(';
+	}
+	return result;
+}
+
+string func(string str)
+{
+	int cnt = 0;
+	if (str.size())
+	{
+		if (str[0] == '(')
+			cnt = 1;
+        
+        else
+            cnt = -1;
+
+		int idx = 1;
+
+		while (cnt)
+		{
+			if (str[idx++] == '(')
+				cnt++;
+			else
+				cnt--;
+		}
+
+		string u = str.substr(0, idx);
+        
+        // idx부터 끝까지 자름.
+		string v = str.substr(idx);
+
+		if (check(u))
+			return u + func(v);
+		else
+			return '(' + func(v) + ')' + change(u);
+	}
+	return "";
+}
+
+string solution(string p) {
+    string answer = "";
+    
+    return func(p);
+}
