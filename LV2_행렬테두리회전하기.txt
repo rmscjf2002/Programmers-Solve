@@ -1,0 +1,103 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+vector<int> solution(int rows, int columns, vector<vector<int>> queries) {
+    
+    vector<int> answer;
+    
+    /* 2차원 벡터 Map에 일단 순번대로 값을 입력 함 
+       그리고 각 단계별로 구현 */
+    
+    int cnt = 1;
+	vector<vector<int>> Map(rows, vector<int>(columns));
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			Map[i][j] = cnt++;
+		}
+	}
+    
+
+	for (unsigned int i = 0; i < queries.size(); i++)
+	{
+
+		vector<vector<int>> v(4); // 단계가 바뀌기전에 값을 저장하려고 벡터를 선언함 2차원으로 선언한 이유는 단계표시
+		int Min = 10001; // 최소값을 answer에 담기 위해 비교하려고 만든 변수
+		bool start = true; // 단계가 시작할 때는 이전 단계 마지막 수를 넣어야 하므로 판별하기 위해 선언
+        
+		// 1단계 ↑
+		for (int j = queries[i][0] - 1; j < queries[i][2] - 1; j++)
+		{
+			if (start)
+			{
+				v[0].push_back(Map[j][queries[i][1] - 1]);
+				start = false;
+			}
+			Map[j][queries[i][1]-1] = Map[j+1][queries[i][1]-1];
+			
+			Min = min(Min, Map[j][queries[i][1] - 1]);
+		}
+
+		int idx = 0;
+		start = true;
+		// 2단계 →
+		for (int j = queries[i][1] ; j <= queries[i][3] - 1; j++)
+		{
+			v[1].push_back(Map[queries[i][0] - 1][j]);
+			if (start)
+			{
+				Map[queries[i][0] - 1][j] = v[0][0];
+				start = false;
+			}
+			else
+				Map[queries[i][0] - 1][j] = v[1][idx++];
+
+			Min = min(Min, Map[queries[i][0] - 1][j]);
+		}
+
+	
+		idx = 0;
+		start = true;
+		
+		
+		// 3단계 ↓
+		for (int j = queries[i][0]; j <= queries[i][2] - 1; j++)
+		{
+			v[2].push_back(Map[j][queries[i][3] - 1]);
+			if (start)
+			{
+				Map[j][queries[i][3] - 1] = v[1][v[1].size()-1];
+				start = false;
+			}
+			else
+			{
+				Map[j][queries[i][3] - 1] = v[2][idx++];
+			}
+			Min = min(Min, Map[j][queries[i][3] - 1]);
+		}
+		
+		idx = 0;
+		start = true;
+		
+		// 4단계 ←
+		for (int j = queries[i][3] - 2; j >= queries[i][1] - 1; j--)
+		{
+			v[3].push_back(Map[queries[i][2] - 1][j]);
+			if (start)
+			{
+				Map[queries[i][2] - 1][j] = v[2][v[2].size()-1];
+				start = false;
+			}
+			else
+				Map[queries[i][2] - 1][j] = v[3][idx++];
+			Min = min(Min, Map[queries[i][2] - 1][j]);
+		}
+		answer.push_back(Min);
+		
+	}
+    return answer;
+}
