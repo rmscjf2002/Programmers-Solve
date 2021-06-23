@@ -1,0 +1,84 @@
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+
+int BFS(vector<vector<int>> v, int x, int y,int m,int n,int t,int type[4][2], bool visit[101][101])
+{
+	int sum = 1; // 이어서 색칠할 수 있는 개수 
+	queue<pair<int, int>> q;
+	q.push({ x,y });
+	visit[x][y] = true;
+	
+
+
+	while (!q.empty())
+	{
+		x = q.front().first;
+		y = q.front().second;
+		q.pop();
+		
+		for (int i = 0; i < 4; i++)
+		{
+			int nx = x + type[i][0];
+			int ny = y + type[i][1];
+			if (nx >= 0 && nx < m && ny >= 0 && ny < n)
+			{
+				if (v[nx][ny] == t) // t는 색칠하는 타입
+				{
+					if (!visit[nx][ny])
+					{
+						visit[nx][ny] = true;
+						q.push({ nx,ny });
+						sum++;
+					}
+				}
+				
+			}
+			
+		}
+	}
+
+    return sum;
+}
+
+
+// 전역 변수를 정의할 경우 함수 내에 초기화 코드를 꼭 작성해주세요.
+vector<int> solution(int m, int n, vector<vector<int>> picture) {
+    int number_of_area = 0;
+    int max_size_of_one_area = 0;
+    int sum = 0;
+    
+    int type[4][2] =
+    {
+	    {-1,0},
+	    {1,0},
+	    {0,-1},
+	    {0,1}
+    };
+    
+    bool visit[101][101] = { false };
+    
+    vector<int> answer(2);
+    answer[0] = number_of_area;
+    answer[1] = max_size_of_one_area;
+    
+    for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (picture[i][j] != 0 && !visit[i][j])
+			{
+				sum = BFS(picture, i, j, m, n,picture[i][j],type,visit);
+				max_size_of_one_area = max(max_size_of_one_area, sum);
+				number_of_area++;
+			}
+		}
+	}
+
+	answer[0] = number_of_area;
+	answer[1] = max_size_of_one_area;
+    
+    return answer;
+}
