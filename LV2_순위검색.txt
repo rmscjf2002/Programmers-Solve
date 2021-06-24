@@ -1,0 +1,209 @@
+#include <string>
+#include <sstream>
+#include <map>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+// 16가지의 조합 수
+
+map<string, vector<int>> scores;
+
+void combination(int num,string s[4])
+{
+	for (int i = 0; i < 16; i++)
+	{
+		string tmp = "";
+
+		for (int j = 0; j < 4; j++)
+		{
+			if (i & (1 << j))
+				tmp.push_back('-');
+			else
+				tmp += s[j];
+		}
+		scores[tmp].push_back(num);
+	}
+}
+
+
+vector<int> solution(vector<string> info, vector<string> query) {
+    vector<int> answer;
+
+	/*int querysize = query.size();
+	
+	for (int i = 0; i < querysize; i++)
+	{
+
+		vector<string> tmp;
+
+		// 개발 언어 먼저 push
+
+		if (query[i].find("cpp") != string::npos)
+			tmp.push_back("cpp");
+		else if (query[i].find("java") != string::npos)
+			tmp.push_back("java");
+		else if (query[i].find("python") != string::npos)
+			tmp.push_back("python");
+		else
+			tmp.push_back("-");
+
+		// 직군 push
+
+		if (query[i].find("backend") != string::npos)
+			tmp.push_back("backend");
+		else if (query[i].find("frontend") != string::npos)
+			tmp.push_back("frontend");
+		else
+			tmp.push_back("-");
+
+		// 경력 push
+
+		if (query[i].find("junior") != string::npos)
+			tmp.push_back("junior");
+		else if (query[i].find("senior") != string::npos)
+			tmp.push_back("senior");
+		else
+			tmp.push_back("-");
+
+		// 소울푸드 push
+
+		int idx = 0;
+		if (query[i].find("pizza") != string::npos)
+		{
+			tmp.push_back("pizza");
+		}
+		else if (query[i].find("chicken") != string::npos)
+		{
+			tmp.push_back("chicken");
+		}
+		else
+		{
+			tmp.push_back("-");
+		}
+
+
+		// 점수 push 
+		int len = query[i].length();
+		string num = "";
+		while (1)
+		{
+			len--;
+			if (query[i][len] == ' ')
+				break;
+			num += query[i][len];
+
+		}
+
+		reverse(num.begin(), num.end());
+		tmp.push_back(num);
+		
+	
+		// answer값 계산
+
+		int ans = 0;
+		for (unsigned int j = 0; j < info.size(); j++)
+		{
+			bool phase1 = false;
+			bool phase2 = false;
+			bool phase3 = false;
+			bool phase4 = false;
+			bool number = false;
+			// info 점수 계산
+			int len2 = info[j].length();
+			string num2 = "";
+			while (1)
+			{
+				len2--;
+				if (info[j][len2] == ' ')
+					break;
+				num2 += info[j][len2];
+			}
+			reverse(num2.begin(), num2.end());
+			if (stoi(num2) >= stoi(num))
+				number = true;
+			else
+				continue;
+			
+
+			for (int k = 0; k < 4; k++)
+			{
+				
+				if (tmp[k] == "-")
+				{
+					if (k == 0)
+						phase1 = true;
+					else if (k == 1 && phase1)
+						phase2 = true;
+					else if (k == 2 && phase2)
+						phase3 = true;
+					else if (k == 3 && phase3)
+						phase4 = true;
+					else
+						break;
+
+				}
+				else if (info[j].find(tmp[k]) != string::npos)
+				{
+
+					if (k == 0)
+						phase1 = true;
+					else if (k == 1 && phase1)
+						phase2 = true;
+					else if (k == 2 && phase2)
+						phase3 = true;
+					else if (k == 3 && phase3)
+						phase4 = true;
+					else
+						break;
+				}
+				else
+					break;
+			}
+			if (phase1 && phase2 && phase3 && phase4 && number)
+				ans++;
+		}
+		answer.push_back(ans);
+		
+	}
+    */
+    // 위처럼 풀었는데 효율성에서 시간초과 
+    
+    
+    // 블로그 참조해서 아래 풀이를 찾음.
+    // stringstream과  비트연산으로 조합만들기
+    // auto for문 활용 배울 부분이 많다.
+	
+    string s[4], num;
+    
+	for (auto &i : info)
+	{
+		stringstream ss(i);
+		ss >> s[0] >> s[1] >> s[2] >> s[3] >> num;
+		combination(stoi(num),s);
+	}
+
+	for (auto &s : scores)
+	{
+		sort(s.second.begin(), s.second.end());
+	}
+
+	for (auto &q : query)
+	{
+		int score;
+		stringstream ss(q);
+		ss >> s[0] >> num >> s[1] >> num >> s[2] >> num >> s[3] >> num;
+		score = stoi(num);
+
+		vector<int> v = scores[s[0] + s[1] + s[2] + s[3]];
+		if (v.size() != 0)
+		{
+			auto it = lower_bound(v.begin(), v.end(), score);
+			answer.push_back(v.size() - (it - v.begin()));
+		}
+		else
+			answer.push_back(0);
+	}
+    return answer;
+}
