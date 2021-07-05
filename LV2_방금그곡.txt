@@ -1,0 +1,127 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+bool pred(pair<string,int> a, pair<string,int> b)
+{
+	return a.second < b.second;
+}
+
+
+string solution(string m, vector<string> musicinfos) {
+    
+    string answer = "";
+
+	// C#,D#,F#,G#,A#은 각자 소문자로 변경
+
+	for (unsigned int i = 0; i < musicinfos.size(); i++)
+	{
+		for (unsigned int j = 0; j < musicinfos[i].length(); j++)
+		{
+			if (musicinfos[i][j] =='#')
+			{
+				int idx = j;
+				j--;
+				musicinfos[i][idx - 1] = tolower(musicinfos[i][idx - 1]);
+				musicinfos[i].erase(musicinfos[i].begin() + idx);
+			}
+		}
+	}
+
+	
+	for (unsigned int j = 0; j < m.length(); j++)
+	{
+		if (m[j] == '#')
+		{
+			int idx = j;
+			j--;
+			m[idx - 1] = tolower(m[idx - 1]);
+			m.erase(m.begin() + idx);
+		}
+	}
+	
+	vector<int> s; // 시작시간 저장
+	vector<int> e; // 종료시간 저장
+	vector<string> t; // 노래제목 저장
+	vector<string> vsheet; // 악보 저장
+
+	for (unsigned int i = 0; i < musicinfos.size(); i++)
+	{
+		int start = 0;  // 음악 재생 시작시간
+		int end = 0;  // 음악 재생 종료시간
+
+		string hour = musicinfos[i].substr(0, 2); // 시작시간 시
+		string minute = musicinfos[i].substr(3, 2); // 시작시간 분
+
+		start = stoi(hour) * 60 + stoi(minute);
+		
+		hour = musicinfos[i].substr(6, 2); // 종료시간 시
+		minute = musicinfos[i].substr(9, 2); // 종료시간 분
+
+		end = stoi(hour) * 60 + stoi(minute);
+		
+		s.push_back(start);
+		e.push_back(end);
+
+		string title;
+		int idx;
+		// 시간은 hh:mm,hh:mm, 이런식으로 되어있으므로 12번째 인덱스부터는 무조건 title
+		for (int j = 12; musicinfos[i][j] != ','; j++)
+		{
+			title += musicinfos[i][j];
+			if (musicinfos[i][j + 1] == ',')
+				idx = j + 2;
+		}
+		t.push_back(title);
+
+		string sheet; 
+		for (unsigned int j = idx; j < musicinfos[i].size(); j++)
+			sheet += musicinfos[i][j];
+		vsheet.push_back(sheet);
+
+	}
+
+	int Maxtime = 0;
+	vector<pair<string, int>> music; // 제목, 인덱스 저장
+
+
+    /* 각 음은 1분에 1개씩 재생된다 <- 이 부분을 제대로 읽지않아서
+        total부분을 안 구했다가 틀림 */
+	for (unsigned int i = 0; i < s.size(); i++)
+	{
+		int diff = e[i] - s[i];
+		string total_sheet;
+
+		for (int j = 0; j < diff; j++)
+			total_sheet += vsheet[i][j%vsheet[i].size()];
+
+
+		if (total_sheet.find(m) != string::npos)
+		{
+			if (diff > Maxtime)
+			{
+				music.clear();
+
+				Maxtime = diff;
+				music.push_back({ t[i],i });
+			}
+			else if (diff == Maxtime)
+			{
+				music.push_back({ t[i],i });
+			}
+		}
+	}
+
+	if (music.size())
+	{
+		sort(music.begin(), music.end(), pred);
+		answer = music[0].first;
+	}
+	else
+		answer = "(None)";
+
+
+    return answer;
+}
