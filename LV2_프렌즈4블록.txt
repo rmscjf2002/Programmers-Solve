@@ -1,0 +1,61 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// 처음에 완전탐색함수를 만들고 재귀로 구현했는데 , 겹치는 부분의 값을 빼는 과정에서 에러가 생겨서
+// 다른사람의 답을 참조했더니 2*2다보니까 아래처럼 풀면 쉽게 풀리는 문제 였다.
+// board[i][j + 1] == tmp && board[i + 1][j] == tmp && board[i + 1][j + 1] == tmp
+
+
+int solution(int m, int n, vector<string> board) {
+    
+    bool check = true;
+	int answer = 0;
+
+	while (check)
+	{
+		bool visit[31][31] = { false };
+		check = false;
+
+		for (int i = 0; i < m - 1; i++)
+		{
+			for (int j = 0; j < n - 1; j++)
+			{
+				if (board[i][j] == ' ')
+					continue;
+
+				char tmp = board[i][j];
+
+				if (board[i][j + 1] == tmp && board[i + 1][j] == tmp && board[i + 1][j + 1] == tmp)
+				{
+					visit[i][j] = true;
+					visit[i + 1][j] = true;
+					visit[i][j + 1] = true;
+					visit[i + 1][j + 1] = true;
+					check = true;
+				}
+
+			}
+		}
+
+		for (int i = 0; i < m; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				if (visit[i][j] == true)
+				{
+					answer++;
+
+					for (int k = i - 1; k >= 0; k--)
+					{
+						board[k + 1][j] = board[k][j];
+						board[k][j] = ' ';
+					}
+				}
+			}
+		}
+
+	}
+    return answer;
+}
