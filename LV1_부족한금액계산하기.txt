@@ -1,0 +1,21 @@
+using namespace std;
+
+long long solution(int price, int money, int count)
+{
+    long long answer = -1;
+    long long sum = 0; // 필요한 금액
+	int cnt = 1; // 이용횟수
+    
+	while(count--)
+    {
+		sum += price*cnt;
+		cnt++;
+	}
+    
+    if(sum > money)
+	    answer = sum - money;
+    else
+        answer = 0;
+
+    return answer;
+}
