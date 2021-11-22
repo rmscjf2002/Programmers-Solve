@@ -1,0 +1,21 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(vector<vector<int>> sizes) {
+    int answer = 0;
+    int w = 0, h = 0;
+	int tmpw = 0, tmph = 0;
+	for (int i = 0; i < sizes.size(); i++)
+	{
+		tmpw = max(sizes[i][0], sizes[i][1]);
+		tmph = min(sizes[i][0], sizes[i][1]);
+
+		w = max(w, tmpw);
+		h = max(h, tmph);
+	}
+
+	answer = w*h;
+    return answer;
+}
