@@ -1,0 +1,37 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int answer = 0;
+bool visited[9] = { false };
+
+void DFS(int sum , int cnt,int depth, vector<vector<int>> &dungeons,int size)
+{
+	if (depth == size)
+	{
+		answer = max(answer, cnt);
+		return;
+	}
+	for (int i = 0; i < size; i++)
+	{
+		if (!visited[i])
+		{
+			visited[i] = true;
+			if (dungeons[i][0] <= sum)
+				DFS(sum - dungeons[i][1], cnt + 1,depth+1,dungeons,size);
+			
+			else
+				DFS(sum, cnt,depth+1, dungeons,size);
+			visited[i] = false;
+		}
+	}
+
+
+}
+
+int solution(int k, vector<vector<int>> dungeons) {
+    int dungeonsize = dungeons.size();
+	DFS(k, 0, 0, dungeons,dungeonsize);
+    return answer;
+}
