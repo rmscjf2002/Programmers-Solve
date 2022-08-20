@@ -1,0 +1,45 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+long long func(long long n)
+{
+	if (n == 1)
+		return 1;
+	return func(n - 1)*n;
+}
+
+
+vector<int> solution(int n, long long k) {
+    vector<int> v;
+	vector<int> answer;
+	for (int i = 1; i <= n; i++)
+		v.push_back(i);
+
+	if (k == 1)
+		answer = v;
+	else
+	{
+		k--; // index맞추기위해
+		long long tmp = func(n);
+		long long mod, div;
+
+		while (v.size() != 1)
+		{
+			tmp /= n; // (n-1)! = n!/n
+			div = k / tmp;
+			mod = k % tmp;
+
+			answer.push_back(v[div]);
+			v.erase(v.begin() + div);
+			k = mod;
+			n--;
+
+		}
+
+		answer.push_back(v[0]);
+	}
+
+    return answer;
+}
