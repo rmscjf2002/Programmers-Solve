@@ -1,0 +1,76 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+vector<vector<int>> graph;
+pair<int, int> check[101];
+bool visited[101];
+int cnt;
+int visitcnt[2];
+
+bool checkExcept(int idx, int cur, int nxt)
+{
+    if((check[idx].first == cur && check[idx].second == nxt) || (check[idx].first == nxt && check[idx].second == cur)) // 제외한 사이클은 방문하면 안됨
+        return false;
+    
+    return true;
+}
+
+void DFS(int idx, int cur)
+{
+    visited[cur] = true;
+    visitcnt[cnt]++;
+    for(int i=0; i<graph[cur].size(); i++)
+    {
+        int nxt = graph[cur][i];
+        
+        if(visited[nxt])
+            continue;
+        
+        if(!checkExcept(idx,cur,nxt))
+            continue;
+        
+        DFS(idx,nxt);
+        
+    }
+    
+    return ;
+}
+
+int solution(int n, vector<vector<int>> wires) {
+    
+    graph.resize(n+1);
+
+	int answer = 0x7f7f7f7f;
+
+	for (int i = 0; i < wires.size(); i++)
+	{
+		graph[wires[i][0]].push_back(wires[i][1]);
+		graph[wires[i][1]].push_back(wires[i][0]);
+		check[i] = { wires[i][0], wires[i][1] };
+	}
+
+    
+    for(int i=0; i<wires.size(); i++)
+    {
+        for(int j=1; j<=n; j++)
+        {
+            if(visited[j])
+                continue;
+            
+            DFS(i,j);
+            cnt++;
+        }
+        
+        if(cnt == 2)
+            answer = min(answer, abs(visitcnt[0] - visitcnt[1]));
+        
+        cnt = 0;
+        visitcnt[0] = visitcnt[1] = 0;
+        fill(visited,visited+101, false);
+    }
+    
+    
+    return answer;
+}
