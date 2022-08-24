@@ -1,0 +1,60 @@
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+
+bool Pred(const pair<int, int> &a, const pair<int, int> &b)
+{
+	if (a.first == b.first)
+		return a.second < b.second;
+
+	return a.first > b.first;
+}
+
+
+vector<int> solution(vector<string> genres, vector<int> plays) {
+   	vector<int> answer;
+
+
+	map<string, vector<pair<int,int>>> m;
+
+	vector<pair<int,string>> order;
+
+	
+	for (int i = 0; i < genres.size(); i++)
+		m[genres[i]].push_back({ plays[i], i });
+	
+
+	for (auto iter : m)
+	{
+		int sum = 0;
+		for (auto i : iter.second)
+			sum += i.first;
+		
+		order.push_back({ sum, iter.first });
+	}
+	
+	sort(order.begin(), order.end(), greater<>());
+
+	
+	int cnt = 0;
+	for (int i = 0; i < order.size(); i++)
+	{
+		for (auto j : m[order[i].second])
+			sort(m[order[i].second].begin(), m[order[i].second].end(),Pred);
+		
+		int cnt = 0;
+		for (auto j : m[order[i].second])
+		{
+			answer.push_back(j.second);
+			cnt++;
+			if (cnt == 2)
+				break;
+		}
+			
+	}
+    return answer;
+}
