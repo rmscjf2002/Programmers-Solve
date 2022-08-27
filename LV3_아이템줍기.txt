@@ -1,0 +1,76 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <tuple>
+
+using namespace std;
+
+int dist[102][102];
+int board[102][102];
+int type[4][2] = 
+{
+	{0,1},
+	{1,0},
+	{0,-1},
+	{-1,0}
+};
+
+
+int solution(vector<vector<int>> rectangle, int characterX, int characterY, int itemX, int itemY) {
+    int answer = 0;
+    characterX *= 2, characterY *= 2, itemX *= 2, itemY *= 2;
+	
+	for (int i = 0; i < rectangle.size(); i++)
+	{
+		for (int j = 0; j < rectangle[0].size(); j++)
+			rectangle[i][j] = rectangle[i][j] * 2;
+
+		int x1 = rectangle[i][0], y1 = rectangle[i][1];
+		int x2 = rectangle[i][2], y2 = rectangle[i][3];
+
+		for (int row = y1; row <= y2; row++)
+			for (int col = x1; col <= x2; col++)
+				board[row][col] = 1;
+	}
+	
+	for (int i = 0; i < rectangle.size(); i++)
+	{
+		int x1 = rectangle[i][0], y1 = rectangle[i][1];
+		int x2 = rectangle[i][2], y2 = rectangle[i][3];
+
+		for (int row = y1 + 1; row < y2; row++)
+			for (int col = x1 + 1; col < x2; col++)
+				board[row][col] = 0;
+	}
+    
+    queue<pair<int, int>> q;
+	q.push({ characterY, characterX });
+	dist[characterY][characterX] = 1;
+    
+   	while (!q.empty())
+	{
+		int y, x;
+		tie(y, x) = q.front();
+		q.pop();
+
+		if (y == itemY && x == itemX)
+			return (dist[y][x] - 1) / 2;
+
+		for (int i = 0; i < 4; i++)
+		{
+			int ny = y + type[i][0];
+			int nx = x + type[i][1];
+
+			if (ny <= 0 || ny >= 102 || nx <= 0 || nx >= 102)
+				continue;
+
+			if (board[ny][nx] == 0 || dist[ny][nx] >= 1)
+				continue;
+
+			q.push({ ny,nx });
+			dist[ny][nx] = dist[y][x] + 1;
+		}
+	}
+    return answer;
+
+}
