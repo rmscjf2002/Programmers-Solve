@@ -1,0 +1,126 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+vector<int> answer;
+vector<int> apeach;
+vector<int> ryan;
+int Arrow;
+int maxDiff;
+
+
+/*void DFS(int k, int n, const vector<int>& info, vector<int> ans)
+{
+	if (k == n)
+	{
+		int Apeachsum = 0;
+		int Ryansum = 0;
+		for (int i = 0; i <= 10; i++)
+		{
+			if (info[i] < ans[i])
+			{
+				if(ans[i] != 0)
+					Ryansum += (10 - i);
+			}
+			else
+			{
+				if(info[i] != 0)
+					Apeachsum += (10 - i);
+			}
+		}
+	
+		if (Ryansum > Apeachsum)
+		{
+		
+			if (maxDiff < Ryansum - Apeachsum)
+			{
+				maxDiff = Ryansum - Apeachsum;
+				answer = ans;
+			}
+	
+		}
+		return;
+	}
+
+	for (int i = 0; i <= 10; i++)
+	{
+		if (ans[i] > info[i])
+			continue;
+		ans[i] += 1;
+		DFS(k + 1, n, info, ans);
+		ans[i] -= 1;
+	}
+	return;
+}*/
+
+void DFS(int k, int apeachSum, int ryanSum, int n)
+{
+	if (k == 11)
+	{
+		if (ryanSum <= apeachSum)
+			return;
+
+		ryan[10] += Arrow - n;
+
+		if (ryanSum - apeachSum > maxDiff)
+		{
+			answer = ryan;
+			maxDiff = ryanSum - apeachSum;
+		}
+
+        else if (ryanSum - apeachSum == maxDiff)
+		{
+			for (int i = 10; i >= 0; i--)
+			{
+				if (ryan[i] == answer[i])
+					continue;
+				else
+				{
+					if (ryan[i] > answer[i])
+						answer = ryan;
+					break;
+				}
+			}
+		}
+		return;
+	}
+
+	int nxt = apeach[k] + 1;
+	if (nxt + n <= Arrow)
+	{
+		int nxtaSum = apeachSum;
+		int nxtrSum = ryanSum + 10 - k;
+		if (nxt != 1)
+			nxtaSum -= (10 - k);
+		ryan.push_back(nxt);
+		DFS(k + 1, nxtaSum, nxtrSum, nxt + n);
+		ryan.pop_back();
+	}
+
+	ryan.push_back(0);
+	DFS(k + 1, apeachSum, ryanSum, n);
+	ryan.pop_back();
+
+}
+
+
+vector<int> solution(int n, vector<int> info) {
+    /*vector<int> ans(11);
+	DFS(0, n, info, ans);
+    */
+    Arrow = n;
+	apeach = info;
+	int sum = 0;
+	for (int i = 0; i <= 10; i++)
+	{
+		if (info[i])
+			sum += (10 - i);
+	}
+    
+    DFS(0,sum,0,0);
+    
+    if(maxDiff == 0)
+        answer.push_back(-1);
+    return answer;
+}
