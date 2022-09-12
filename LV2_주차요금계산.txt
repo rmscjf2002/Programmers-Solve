@@ -1,0 +1,45 @@
+#include <string>
+#include <vector>
+#include <cmath>
+#include <map>
+
+using namespace std;
+
+vector<int> solution(vector<int> fees, vector<string> records) {
+    vector<int> answer;
+    map<string, int> m;
+
+	for (int i = 0; i < records.size(); i++)
+	{
+		string hour = records[i].substr(0, 2);
+		string min = records[i].substr(3, 2);
+		string name = records[i].substr(6, 4);
+
+		int totaltime = stoi(hour) * 60 + stoi(min);
+
+		if (records[i][11] == 'I')
+			m[name] -= totaltime;
+
+		else if (records[i][11] == 'O')
+			m[name] += totaltime;
+	}
+
+	for (auto iter : m)
+	{
+		if (iter.second <= 0)
+			iter.second += 1439;
+
+		if (iter.second <= fees[0])
+			answer.push_back(fees[1]);
+		else
+		{
+			int sum = fees[1];
+			int diff = iter.second - fees[0];
+			sum += ceil((double)diff / fees[2]) * fees[3];
+			
+			answer.push_back(sum);
+		}
+	}
+
+    return answer;
+}
