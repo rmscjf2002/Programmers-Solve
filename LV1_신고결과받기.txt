@@ -1,0 +1,49 @@
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+#include <sstream>
+
+using namespace std;
+
+vector<int> solution(vector<string> id_list, vector<string> report, int k) {
+    vector<int> answer;
+    map<string, set<string>> reportlist;
+	map<string, int> reportcnt;
+	map<string, int> resultcnt;
+
+	for (int i = 0; i < report.size(); i++)
+	{
+		istringstream iss(report[i]);
+		string buf;
+		string a, b;
+		int cnt = 1;
+		while (getline(iss, buf, ' '))
+		{
+			if (cnt == 1)
+				a = buf;
+			else
+				b = buf;
+			cnt++;
+		}
+		auto iter = reportlist[b].find(a);
+		if(iter == reportlist[b].end())
+        {
+			reportlist[b].insert(a);
+            reportcnt[b]++;
+        }
+	}
+
+	for (auto iter : reportcnt)
+	{
+		if (iter.second >= k)
+		{
+			for (auto i : reportlist[iter.first])
+				resultcnt[i]++;
+		}
+	}
+
+	for (auto i : id_list)
+		answer.push_back(resultcnt[i]);
+    return answer;
+}
