@@ -1,0 +1,97 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+vector<int> solution(vector<string> operations) {
+    vector<int> answer;
+    priority_queue<int> maxpq;
+	priority_queue<int, vector<int>, greater<int>> minpq;
+	map<int, int> m; // 개수 확인
+	for (int i = 0; i < operations.size(); i++)
+	{
+		while (!maxpq.empty() && m[maxpq.top()] == 1)
+		{
+			m[maxpq.top()]--;
+			maxpq.pop();
+		}
+
+		while (!minpq.empty() && m[minpq.top()] == 1)
+		{
+			m[minpq.top()]--;
+			minpq.pop();
+		}
+
+		if (operations[i][0] == 'I')
+		{
+
+			bool minus = false;
+			int n = 0;
+			for (auto j: operations[i])
+			{
+				if (j == ' ' || j == 'I')
+					continue;
+				if (j == '-')
+				{
+					minus = true;
+					continue;
+				}
+				n *= 10;
+				n += j - '0';
+			}
+			if (minus)
+				n *= -1;
+			maxpq.push(n);
+			minpq.push(n);
+			m[n] += 2;
+		}
+
+		else if (operations[i][0] == 'D')
+		{
+			if (operations[i][2] == '1')
+			{
+				//최대값 삭제
+				if (maxpq.empty())
+					continue;
+
+				m[maxpq.top()]--;
+				maxpq.pop();
+			}
+
+			else if (operations[i][2] == '-')
+			{
+				//최소값 삭제
+				if (minpq.empty())
+					continue;
+				m[minpq.top()]--;
+				minpq.pop();
+			}
+		}
+
+	}
+
+	while (!maxpq.empty() && m[maxpq.top()] == 1)
+	{
+		m[maxpq.top()]--;
+		maxpq.pop();
+	}
+
+	while (!minpq.empty() && m[minpq.top()] == 1)
+	{
+		m[minpq.top()]--;
+		minpq.pop();
+	}
+
+	if (!maxpq.empty())
+		answer.push_back(maxpq.top());
+	else
+		answer.push_back(0);
+
+	if (!minpq.empty())
+		answer.push_back(minpq.top());
+	else
+		answer.push_back(0);
+    return answer;
+}
