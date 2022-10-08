@@ -1,0 +1,41 @@
+#include <string>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+int solution(vector<string> want, vector<int> number, vector<string> discount) {
+    map<string, int> m;
+
+
+	int answer = 0;
+
+	for (int i = 0; i <= discount.size() - 10; i++)
+	{
+		for (int j = 0; j < want.size(); j++)
+			m[want[j]] = number[j];
+		int day = 10;
+		int idx = i;
+		while (day--)
+		{
+			if (m[discount[idx]] != 0)
+				m[discount[idx]]--;
+			idx++;
+
+			bool check = true;
+			for (auto iter : m)
+			{
+				if (iter.second != 0)
+				{
+					check = false;
+					break;
+				}
+			}
+
+			if (check)
+				answer++;
+		}
+	}
+	
+    return answer;
+}
