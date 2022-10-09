@@ -1,0 +1,41 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int m, int n, vector<vector<int>> puddles) {
+    int answer = 0;
+    int dp[101][101] = { 0 };
+
+	dp[1][1] = 1;
+
+	for (auto i : puddles)
+		dp[i[1]][i[0]] = -1;
+	
+
+	const int MOD = 1000000007;
+
+
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= m; j++)
+		{
+            
+	        int tmpa = 0, tmpb = 0;
+            
+			if (dp[i][j] == -1) //웅덩이
+				continue;
+
+			if (dp[i - 1][j] != -1)
+				tmpa = dp[i - 1][j];
+			if (dp[i][j - 1] != -1)
+				tmpb = dp[i][j - 1];
+
+			dp[i][j] += (tmpa + tmpb) % MOD;
+
+		}
+	}
+
+    answer = dp[n][m];
+    return answer;
+}
