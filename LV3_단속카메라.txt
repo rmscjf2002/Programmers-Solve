@@ -1,0 +1,26 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solution(vector<vector<int>> routes) {
+    int answer = 1;
+
+	sort(routes.begin(), routes.end());
+
+	int tmp = routes[0][1];
+
+	for (auto i : routes)
+	{
+		if (i[0] > tmp)
+		{
+			answer++;
+			tmp = i[1];
+		}
+		
+		if (i[1] <= tmp)
+			tmp = i[1];
+	}
+    return answer;
+}
