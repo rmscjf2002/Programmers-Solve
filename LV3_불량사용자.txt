@@ -1,0 +1,73 @@
+#include <string>
+#include <vector>
+#include <set>
+
+using namespace std;
+
+bool check[8] = { false };
+vector<string> tmpuser, tmpban;
+int len;
+set<string> s;
+
+void DFS(int idx)
+{
+	if (idx == len)
+	{
+		string str = "";
+
+		for (int i = 0; i < 8; i++)
+		{
+			if (!check[i])
+				continue;
+			str += to_string(i);
+		}
+
+		s.insert(str);
+		return;
+	}
+
+	for (int i = 0; i < tmpuser.size(); i++)
+	{
+		if (check[i])
+			continue;
+
+		if (tmpuser[i].length() != tmpban[idx].length())
+			continue;
+
+		bool isEqual = true;
+
+		for (int j = 0; j < tmpuser[i].length(); j++)
+		{
+			if (tmpban[idx][j] == '*')
+				continue;
+
+			if (tmpuser[i][j] != tmpban[idx][j])
+			{
+				isEqual = false;
+				break;
+			}
+		}
+
+		if (isEqual)
+		{
+			check[i] = true;
+			DFS(idx + 1);
+			check[i] = false;
+		}
+	}
+	return;
+}
+
+int solution(vector<string> user_id, vector<string> banned_id) {
+    
+	int answer = 0;
+	tmpuser = user_id;
+	tmpban = banned_id;
+	len = banned_id.size();
+
+	DFS(0);
+	
+	answer = s.size();
+
+    return answer;
+}
