@@ -1,0 +1,58 @@
+#include <string>
+#include <vector>
+#include <set>
+#include <map>
+
+using namespace std;
+
+vector<int> solution(vector<string> gems) {
+    set<string> total;
+	
+	for (auto s : gems)
+		total.insert(s);
+
+	int type = total.size(); // 총 보석 개수
+
+	vector<int> answer(2);
+	int start = 0;
+	int end = 0;
+	int Min = 0x7f7f7f7f;
+	map<string, int> m;
+	int i;
+	m[gems[end]]++;
+	while (start < gems.size() && end < gems.size())
+	{
+		if (m.size() < type)
+		{
+			end++;
+			if (end >= gems.size())
+				break;
+			m[gems[end]]++;
+		}
+		else if (m.size() == type)
+		{
+			while (start < gems.size())
+			{
+				if (m[gems[start]] == 1)
+					break;
+				else
+				{
+					m[gems[start]]--;
+					start++;
+				}
+				
+			}
+
+			if (Min > end - start)
+			{
+				answer[0] = start + 1;
+				answer[1] = end + 1;
+				Min = end - start;
+			}
+			m.erase(gems[start]);
+			start++;
+		}
+	}
+
+    return answer;
+}
